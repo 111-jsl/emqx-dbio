@@ -10,8 +10,8 @@
     test/1
     ]).
 
--define(Len_of_Fid, 8).
--define(Len_of_Sid, 16).
+-define(Len_of_Fid, 8). % bit
+-define(Len_of_Sid, 16). % bit
 -define(Loop_time, 100000).
 -define(Seg_num, 1000).
 % -define(File_num, 10).
@@ -25,7 +25,7 @@ put(Db, Key, Value) ->
 
 get_exact(Db, Fid, Num_of_Seg) when Num_of_Seg == 0 -> [];
 get_exact(Db, Fid, Num_of_Seg) when Num_of_Seg > 0 ->
-    case rocksdb:get(Db, <<Fid, (Num_of_Seg)>>, []) of
+    case rocksdb:get(Db, <<Fid, Num_of_Seg>>, []) of
         {ok, Value} -> 
             % io:format("retrieved value ~w~n", [Value]),
             Nxt = get_exact(Db, Fid, Num_of_Seg - 1),
@@ -101,3 +101,5 @@ test(Path) ->
     ok = rocksdb:close(Db),
     rocksdb:destroy(Path, []).
     
+
+multiproc_test() ->
