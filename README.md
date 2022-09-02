@@ -1,6 +1,14 @@
-<<<<<<< HEAD
 # emqx-dbio
-=======
-# dbio
-# dbio
->>>>>>> 68e65c6 (first commit)
+
+#### dbio:
+
+naive implementation
+
+#### dbio2:
+
+use auxdb to store {Fid, Bitmap}, Bitmap tells us whether all segments are prepared and which of them db haven't got yet.
+
+#### receiver & sender:
+
+for performance test
+
