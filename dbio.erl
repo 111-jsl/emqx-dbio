@@ -1,7 +1,7 @@
 -module(dbio).
 
 -include_lib("eunit/include/eunit.hrl").
-
+-include("./macro.hrl").
 
 
 -export([
@@ -10,10 +10,7 @@
     test/1
     ]).
 
--define(Len_of_Fid, 8). % bit
--define(Len_of_Sid, 16). % bit
--define(Loop_time, 100000).
--define(Seg_num, 1000).
+
 % -define(File_num, 10).
 
 
@@ -51,7 +48,7 @@ get(Db, Fid, Num_of_Seg) ->
 
 seg_loop(Db, Fid, Loop) when Loop == 0 -> 0;
 seg_loop(Db, Fid, Loop) when Loop > 0 ->
-    put(Db, <<Fid:?Len_of_Fid, Loop:?Len_of_Sid>>, <<(erlang:system_time())>>).
+    put(Db, <<Fid:?FID_LEN, Loop:?SID_LEN>>, <<(erlang:system_time())>>).
 
 
 time_test(Db, Loop) when Loop == 0 -> 0;
@@ -59,7 +56,7 @@ time_test(Db, Loop) when Loop > 0 ->
     seg_loop(Db, Loop, ?Seg_num),
 %     case rand:uniform(2) of
 %         1 -> 
-%             % put(Db, <<(rand:uniform(?File_num)):?Len_of_Fid, (rand:uniform(?Seg_num)):?Len_of_Sid>>, <<(erlang:system_time())>>);
+%             % put(Db, <<(rand:uniform(?File_num)):?FID_LEN, (rand:uniform(?Seg_num)):?SID_LEN>>, <<(erlang:system_time())>>);
             
 %         2 -> 
 % % Debug mode
