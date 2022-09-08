@@ -29,6 +29,10 @@ If detector finds that all segments of a file have arrived(Bitmap all 1), it wil
 
 For clients, they can call `rocksdb:get(Db, <<Fid>>, [])` to get the file of Fid.
 
+#### The problem of this project(will be modified in the near future):
+
+clients have to wait for the segments to come. If they try to get file before all the segments are prepared, they only get `not_found` and have no idea which segments are lost.
+
 Build
 -----
 
