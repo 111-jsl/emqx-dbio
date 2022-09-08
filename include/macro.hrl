@@ -23,5 +23,17 @@
 
 -define(FID_LEN, 8). % bit
 -define(SID_LEN, 16). % bit
--define(Loop_time, 100000).
--define(Seg_num, 1000).
+
+
+% MODULE test for debug
+-ifdef(TEST).
+-define(
+    TRACE(Template, Args), 
+    io:format(user, "TRACE ~p: ~p " ++ Template, lists:flatten([?MODULE, ?LINE, Args]))
+).
+-else.
+-define(
+    TRACE(_T, _A),
+    void
+).
+-endif.

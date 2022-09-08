@@ -1,3 +1,0 @@
-[submodule "erlang-rocksdb"]
-	path = erlang-rocksdb
-	url = https://github.com/emqx/erlang-rocksdb.git

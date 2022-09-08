@@ -1,0 +1,4 @@
+[{<<"erlang_rocksdb">>,
+  {git,"https://github.com/emqx/erlang-rocksdb.git",
+       {ref,"84928ef578e3d0252f0b424f2d65dec75176e6d9"}},
+  0}].
