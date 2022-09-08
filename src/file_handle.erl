@@ -50,35 +50,21 @@ bind(File, Fid, Db) ->
     
 
 detector(Bitmap, Fid, Db) ->
-    % ?TRACE("bitmap:~w~n", [Bitmap]),
     receive
         {From, Sid} -> New_Bitmap = setelement(Sid + 1, Bitmap, 1)
     end,
-    % % ?TRACE("aAAAAA~n", []),
-    % ?TRACE("WHAT SID: ~w~n", [Sid]),
-    % ?TRACE("Fid: ~w, Bitmap: ~w~n", [Fid, Bitmap]),
     Check = lists:member(0, tuple_to_list(New_Bitmap)),
-    % io:format("~w~n", [Check]),
     case Check of
         true -> 
-            % file:write_file("./log", <<"TRUE~n">>, append),
             detector(New_Bitmap, Fid, Db);
         false -> 
-            % file:write_file("./log", <<"FALSE~n">>, append),
-            % ?TRACE("Fid:~w~n", [<<Fid>>]),
             Data = dbio2:get_all(Db, Fid, tuple_size(New_Bitmap) - 1),
-            % ?TRACE("Data:~w~n", [Data]),
             rocksdb:put(Db, <<Fid>>, Data, [])
-            % {ok, Get} = rocksdb:get(Db, <<1>>, []),
-            % Get = Data
-            
     end.
 
 
 % sender
 sender(File, Sid, Fid, Bound_Det, Db) ->
-    % ?TRACE("Db: ~w~n", [Db]),
-    
     Offset = Sid * ?SEG_SIZE,
     try (bit_size(<<Sid>>) =< ?SID_LEN) and (bit_size(<<Fid>>) =< ?FID_LEN) of
         true -> ok
@@ -86,14 +72,10 @@ sender(File, Sid, Fid, Bound_Det, Db) ->
         false -> throw("key length out of the bound")
     end,
     Key = <<Fid:?FID_LEN, Sid:?SID_LEN>>,
-    % ?TRACE("Key:~w~n", [Key]),
     {ok, Pid} = file:open("./" ++ ?INPUT_DIR_NAME ++ "/" ++ File, read),
     {ok, _} = file:position(Pid, Offset),
     {ok, Value} = file:read(Pid, ?SEG_SIZE),
-    % ?TRACE("is list? ~w~n", [is_binary(Value)]),
-    % ?TRACE("Value:~w~n", [[Value]]),
     ok = file:close(Pid),
-    % io:format(user, "OOOOOOOOOO:~w~n", [is_binary(Key) and is_binary(<<Value>>)]),
     ok = rocksdb:put(Db, Key, list_to_binary(Value), []),
     Bound_Det ! {self(), Sid}.
 
